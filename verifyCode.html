@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+		<title>输入验证码</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/common.css" />
+		<link rel="stylesheet" href="css/iconfont.css" />
+		<style>
+			input{
+				text-align: center;
+				padding: 0 !important;
+				/*margin: 0 20px;*/
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<!-- 头部组件 -->
+			<div class="container">
+				<div class="row">
+					<div class="div-panel container-fluid">
+						<div class="col-xs-2">
+							<i class="glyphicon glyphicon-remove" aria-hidden="true"></i>
+						</div>
+						<!--<div class="col-xs-8 col-sm-8"></div>-->
+						<!--<div class="col-xs-3 col-xs-offset-7">
+							<a href="#" style="color: white;">注册</a>
+						</div>-->
+					</div>
+				</div>
+			</div>
+			<!--标题-->
+			<div class="container heading">
+				<div class="row container-fluid">
+					<div class="">
+						<h2>输入验证码</h2>
+					</div>
+					<div class="span-label">我们已向18725467654发送验证码短信，请查看短信并输入验证码</div>
+				</div>
+			</div>
+			<div class="container">
+				<div class="row container-fluid">
+					<form id="pLogin" action="#" method="get">
+						<div class="form-group">
+							<input class="col-xs-2" id="input1" @input="inputChar(1)" type="number" maxlength="1" name="phone" />
+							<div class="col-xs-1"></div>
+							<input class="col-xs-2" id="input2" @input="inputChar(2)" type="number" maxlength="1" name="phone" />
+							<div class="col-xs-1"></div>
+							<input class="col-xs-2" id="input3" @input="inputChar(3)" type="number" maxlength="1" name="phone" />
+							<div class="col-xs-1"></div>
+							<input class="col-xs-2" id="input4" @input="inputChar(4)" type="number" maxlength="1" name="phone" />
+							<div v-show="!sendCode" class="col-xs-12" style="margin-top: 10px; padding: 0;">
+								<span class="span-label">
+									收不到驗證碼？ <a href="#" @click="reSendCode(18725467654)" style="color: #0D9F67;">重新獲取</a>
+								</span>
+							</div>
+							<div v-show="sendCode" class="col-xs-12" style="margin-top: 10px; padding: 0;">
+								<span class="span-label">
+									{{sendTime}}s後重新发送
+								</span>
+							</div>
+						</div>
+						<div>
+							
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js" ></script>
+	<script type="text/javascript" src="js/vue.js" ></script>
+	<script type="text/javascript" src="js/iconfont.js"></script>
+	<script>
+		var app = new Vue({
+			el:'#app',
+			data:{
+				sendCode:false,
+				sendTime:0
+			},
+			methods:{
+				reSendCode:function(phone){
+					this.sendCode=true;
+					this.sendTime=60;
+					var interval = setInterval(function(){
+						if(app.sendTime > 0){
+							app.sendTime--;
+						}
+						if(app.sendTime==0){
+							app.sendCode=false;
+							clearInterval(interval);
+						}
+					},1000);
+				},
+				inputChar: function(index){
+					if(/[0-9]/.test($('#input'+index).val())){
+						if(index == 4){
+							return;
+						}
+						$('#input'+(index+1)).focus();
+					}else{
+						$('#input'+index).val('')
+					}
+				}
+			}
+		})
+		$(function(){
+			$('input').on('focus', function(){
+				$(this).css('border-bottom','1px solid #0D9F67');
+			}).on('blur',function(){
+				$(this).css('border-bottom','1px solid #2F2F3A');
+			})
+		})
+	</script>
+</html>
